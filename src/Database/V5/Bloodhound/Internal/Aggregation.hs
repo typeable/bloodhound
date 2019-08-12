@@ -27,6 +27,7 @@ mkAggregations name aggregation = M.insert name aggregation emptyAggregations
 
 data Aggregation = TermsAgg TermsAggregation
                  | CardinalityAgg CardinalityAggregation
+                 | MaxAgg MaxAggregation
                  | DateHistogramAgg DateHistogramAggregation
                  | ValueCountAgg ValueCountAggregation
                  | FilterAgg FilterAggregation
@@ -57,6 +58,9 @@ instance ToJSON Aggregation where
                                          "precisionThreshold" .= precisionThreshold
                                        ]
            ]
+
+  toJSON (MaxAgg (MaxAggregation field)) =
+    object ["max" .= omitNulls [ "field" .= field ]]
 
   toJSON (DateHistogramAgg
           (DateHistogramAggregation field interval format
@@ -123,6 +127,10 @@ data TermsAggregation = TermsAggregation
 data CardinalityAggregation = CardinalityAggregation
   { cardinalityField   :: FieldName,
     precisionThreshold :: Maybe Int
+  } deriving (Eq, Show)
+
+data MaxAggregation = MaxAggregation
+  { maxField :: FieldName
   } deriving (Eq, Show)
 
 data DateHistogramAggregation = DateHistogramAggregation

@@ -372,6 +372,7 @@ module Database.Bloodhound.Types
        , ValueCountAggregation(..)
        , FilterAggregation(..)
        , CardinalityAggregation(..)
+       , MaxAggregation(..)
        , DateHistogramAggregation(..)
        , DateRangeAggregation(..)
        , DateRangeAggRange(..)

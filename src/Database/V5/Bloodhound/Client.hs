@@ -801,10 +801,11 @@ putMapping :: (MonadBH m, ToJSON a) => IndexName
                  -> MappingName -> a -> m Reply
 putMapping (IndexName indexName) (MappingName mappingName) mapping =
   bindM2 put url (return body)
-  where url = joinPath [indexName, "_mapping", mappingName]
+  where url = joinPath [indexName]
         -- "_mapping" and mappingName above were originally transposed
         -- erroneously. The correct API call is: "/INDEX/_mapping/MAPPING_NAME"
-        body = Just $ encode mapping
+        body = encode $ object
+          [ "mappings" .= mapping ]
 
 versionCtlParams :: IndexDocumentSettings -> [(Text, Maybe Text)]
 versionCtlParams cfg =

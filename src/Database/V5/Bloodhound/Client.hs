@@ -804,7 +804,7 @@ putMapping (IndexName indexName) (MappingName mappingName) mapping =
   where url = joinPath [indexName]
         -- "_mapping" and mappingName above were originally transposed
         -- erroneously. The correct API call is: "/INDEX/_mapping/MAPPING_NAME"
-        body = encode $ object
+        body = Just $ encode $ object
           [ "mappings" .= mapping ]
 
 versionCtlParams :: IndexDocumentSettings -> [(Text, Maybe Text)]

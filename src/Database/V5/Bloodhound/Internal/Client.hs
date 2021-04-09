@@ -62,6 +62,7 @@ newtype BH m a = BH {
     } deriving ( Functor
                , Applicative
                , Monad
+               , MonadFail
                , MonadIO
                , MonadState s
                , MonadWriter w
@@ -2331,7 +2332,7 @@ instance ToJSON Interval where
   toJSON Minute  = "minute"
   toJSON Second  = "second"
 
-parseStringInterval :: (Monad m) => String -> m NominalDiffTime
+parseStringInterval :: (MonadFail m) => String -> m NominalDiffTime
 parseStringInterval s = case span isNumber s of
   ("", _) -> fail "Invalid interval"
   (nS, unitS) -> case (readMay nS, readMay unitS) of

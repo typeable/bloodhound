@@ -1552,7 +1552,7 @@ instance ToJSON Interval where
   toJSON Second = "second"
   toJSON (FractionalInterval fraction interval) = toJSON $ show fraction ++ show interval
 
-parseStringInterval :: (Monad m) => String -> m NominalDiffTime
+parseStringInterval :: (MonadFail m) => String -> m NominalDiffTime
 parseStringInterval s = case span isNumber s of
   ("", _) -> fail "Invalid interval"
   (nS, unitS) -> case (readMay nS, readMay unitS) of

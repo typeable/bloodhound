@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP                        #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE RecordWildCards            #-}
@@ -12,6 +13,12 @@ import qualified Data.Text                                as T
 
 import           Database.V1.Bloodhound.Internal.Newtypes
 import           Database.V1.Bloodhound.Types.Class
+
+#if !MIN_VERSION_base(4,13,0)
+import Control.Monad.Fail
+import Prelude hiding (fail)
+#endif
+
 
 
 data GeoPoint =

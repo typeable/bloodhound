@@ -523,13 +523,13 @@ createIndex indexSettings (IndexName indexName) =
 createIndexWith :: MonadBH m
   => [UpdatableIndexSetting]
   -> Int -- ^ shard count
-  -> IndexName 
+  -> IndexName
   -> m Reply
 createIndexWith updates shards (IndexName indexName) =
   bindM2 put url (return (Just body))
   where url = joinPath [indexName]
         body = encode $ object
-          ["settings" .= deepMerge 
+          ["settings" .= deepMerge
             ( HM.singleton "index.number_of_shards" (toJSON shards) :
               [u | Object u <- toJSON <$> updates]
             )
@@ -575,8 +575,8 @@ getIndexSettings (IndexName indexName) =
   where
     url = joinPath [indexName, "_settings"]
 
--- | 'forceMergeIndex' 
--- 
+-- | 'forceMergeIndex'
+--
 -- The force merge API allows to force merging of one or more indices through
 -- an API. The merge relates to the number of segments a Lucene index holds
 -- within each shard. The force merge operation allows to reduce the number of
@@ -1035,10 +1035,10 @@ searchByType (IndexName indexName)
 -- search results. Note that the search is put into 'SearchTypeScan'
 -- mode and thus results will not be sorted. Combine this with
 -- 'advanceScroll' to efficiently stream through the full result set
-getInitialScroll :: 
-  (FromJSON a, MonadThrow m, MonadBH m) => IndexName -> 
-                                           MappingName -> 
-                                           Search -> 
+getInitialScroll ::
+  (FromJSON a, MonadThrow m, MonadBH m) => IndexName ->
+                                           MappingName ->
+                                           Search ->
                                            m (Either EsError (SearchResult a))
 getInitialScroll (IndexName indexName) (MappingName mappingName) search' = do
     let url = addQuery params <$> joinPath [indexName, mappingName, "_search"]
@@ -1063,7 +1063,7 @@ getInitialSortedScroll (IndexName indexName) (MappingName mappingName) search = 
     resp' <- bindM2 dispatchSearch url (return search)
     parseEsResponse resp'
 
-scroll' :: (FromJSON a, MonadBH m, MonadThrow m) => Maybe ScrollId -> 
+scroll' :: (FromJSON a, MonadBH m, MonadThrow m) => Maybe ScrollId ->
                                                     m ([Hit a], Maybe ScrollId)
 scroll' Nothing = return ([], Nothing)
 scroll' (Just sid) = do
@@ -1090,13 +1090,13 @@ advanceScroll (ScrollId sid) scroll = do
   where scrollTime = showText secs <> "s"
         secs :: Integer
         secs = round scroll
-        
+
         scrollObject = object [ "scroll" .= scrollTime
                               , "scroll_id" .= sid
                               ]
 
-simpleAccumulator :: 
-  (FromJSON a, MonadBH m, MonadThrow m) => 
+simpleAccumulator ::
+  (FromJSON a, MonadBH m, MonadThrow m) =>
                                 [Hit a] ->
                                 ([Hit a], Maybe ScrollId) ->
                                 m ([Hit a], Maybe ScrollId)

@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP                        #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE RecordWildCards            #-}
@@ -16,6 +17,11 @@ import qualified Data.Text           as T
 
 import           Database.Bloodhound.Common.Script as X
 import           Database.V5.Bloodhound.Internal.Newtypes
+
+#if !MIN_VERSION_base(4,13,0)
+import Control.Monad.Fail
+import Prelude hiding (fail)
+#endif
 
 data Query =
     TermQuery                   Term (Maybe Boost)

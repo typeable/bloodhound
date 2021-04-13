@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP                        #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses      #-}
@@ -26,6 +27,10 @@ import           Database.V1.Bloodhound.Internal.Newtypes
 import           Database.V1.Bloodhound.Internal.Query
 import           Database.V1.Bloodhound.Internal.StringlyTyped
 
+#if !MIN_VERSION_base(4,13,0)
+import Control.Monad.Fail
+import Prelude hiding (fail)
+#endif
 
 {-| Common environment for Elasticsearch calls. Connections will be
     pipelined according to the provided HTTP connection manager.
